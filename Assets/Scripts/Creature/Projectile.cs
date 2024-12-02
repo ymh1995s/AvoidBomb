@@ -46,13 +46,4 @@ public class Projectile : ROOTOBJECT
             transform.position = targetPos;
         }
     }
-
-    private void OnTriggerEnter(Collider other)
-    {
-        if (other.CompareTag("Ground"))
-        {
-            //HitTrigger?.Invoke(targetPos);
-            Destroy(gameObject);
-        }
-    }
 }
