@@ -2,7 +2,7 @@ using UnityEngine;
 
 public abstract class ROOTOBJECT : MonoBehaviour
 {
-    // ¸ÖÆ¼°ÔÀÓ ±¸»ó¿ë
-    protected string CLASS; // ¾î¶² Å¬·¡½ºÀÇ ¿ÀºêÁ§Æ®ÀÎ°¡?
-    protected int ID; // ¸î ¹øÂ° ¾ÆÀÌµğÀÎ°¡?, È¤Àº À§ CLASS »èÁ¦ ÈÄ ID·Î¸¸ °ü¸®ÇÒ °ÍÀÎ°¡?
+    // ë©€í‹°ê²Œì„ êµ¬ìƒìš©
+    protected string CLASS; // ì–´ë–¤ í´ë˜ìŠ¤ì˜ ì˜¤ë¸Œì íŠ¸ì¸ê°€?
+    protected int ID; // ëª‡ ë²ˆì§¸ ì•„ì´ë””ì¸ê°€?, í˜¹ì€ ìœ„ CLASS ì‚­ì œ í›„ IDë¡œë§Œ ê´€ë¦¬í•  ê²ƒì¸ê°€?
 }

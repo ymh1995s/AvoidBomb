@@ -14,13 +14,10 @@ public class ProjectileSpawner : MonoBehaviour
 
     IEnumerator SpawnBomb()
     {
-        while (true) // 무한 루프
+        while (true)
         {
-            // 프리팹을 소환
             Instantiate(bomb, transform.position, Quaternion.identity);
-
-            // 1초 기다리기
-            yield return new WaitForSeconds(1f);
+            yield return new WaitForSeconds(0.2f);
         }
     }
 }

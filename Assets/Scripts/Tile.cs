@@ -1,32 +1,69 @@
 using System.Collections;
+using Unity.VisualScripting;
 using UnityEngine;
 
 public class Tile : MonoBehaviour
 {
+    // ë¦¬ìŠ¤ë„ˆ íŒ¨í„´!
     public delegate void DHitTrigger(Tile tile, int indexY, int indexX);
     public event DHitTrigger HitTrigger;
     
-    // Y X´Â È®ÀÎ¿ëÀ¸·Î, ½ÇÁ¦ »ç¿ëµÇÁø ¾ÊÀ½
+    // Y XëŠ” í™•ì¸ìš©ìœ¼ë¡œ, ì‹¤ì œ ì‚¬ìš©ë˜ì§„ ì•ŠìŒ
     public int indexY { get; set; }
     public int indexX { get; set; }
     public GameObject Hitffect;
+    private Coroutine fireCoroutine;
+    public State state;
 
-    public void ActivateFIre()
+    public enum State
     {
-        StartCoroutine(DoFireEffect());
+        None,
+        Fire,
+        Obstacle
+    }
+
+    private void Start()
+    {
+        state = State.None;
+    }
+
+    public void ActivateFIre(bool directHit)
+    {
+        if(directHit ==true)
+        {
+            // TODO : ì§ê²© ë°ë¯¸ì§€
+            // TODO : ì‚­ì œ
+            // TODO : ??ì•„ë‹Œê°€? ì‚­ì œ ë³´ë¥˜
+        }
+
+        if(state==State.Fire)
+        {
+            StopCoroutine(fireCoroutine);
+        }
+        fireCoroutine = StartCoroutine(DoFireEffect());
     }
 
     IEnumerator DoFireEffect()
     {
+        state = State.Fire;
         Hitffect.SetActive(true);
         yield return new WaitForSeconds(3);
         Hitffect.SetActive(false);
+        state = State.None;
     }
 
     private void OnTriggerEnter(Collider other)
     {
         if (other.CompareTag("Projectile"))
         {
+            Projectile projectile = other.GetComponent<Projectile>();
+            Vector3 playerPos = GameManager.Instance.player.transform.position;
+            if((int)playerPos.x == transform.position.x && (int)playerPos.z == transform.position.z)
+            {
+                projectile.PlayerHit();
+            }
+
+            Destroy(other.gameObject);
             HitTrigger?.Invoke(this, indexY, indexX);
         }
     }

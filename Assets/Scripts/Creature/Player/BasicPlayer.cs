@@ -10,7 +10,7 @@ public class BasicPlayer : BasePlayer
     protected override void Start()
     {
         base.Start();
-        // Animator ÄÄÆ÷³ÍÆ® °¡Á®¿À±â
+        hp = (int)MasterHP.Basic;
         animator = GetComponent<Animator>();
     }
 
@@ -21,27 +21,28 @@ public class BasicPlayer : BasePlayer
 
     }
 
+    // ì§ì—…ë§ˆë‹¤ ì• ë‹ˆë©”ì´ì…˜ì´ ë‹¤ë¥¼ ìˆ˜ ìˆìœ¼ë‹ˆê¹Œ ì—¬ê¸°ì— ë†¨ìŒ
     void CheckAnimState()
     {
         if(preAnimState!= state)
         {
-            if (state == (int)State.forward)
+            if (state == (int)PlayerState.forward)
             {
                 animator.SetTrigger("RunForward");
             }
-            else if (state == (int)State.back)
+            else if (state == (int)PlayerState.back)
             {
                 animator.SetTrigger("RunBack");
             }
-            else if (state == (int)State.right)
+            else if (state == (int)PlayerState.right)
             {
                 animator.SetTrigger("RunRight");
             }
-            else if (state == (int)State.left)
+            else if (state == (int)PlayerState.left)
             {
                 animator.SetTrigger("RunLeft");
             }
-            else if (state == (int)State.Idle)
+            else if (state == (int)PlayerState.Idle)
             {
                 animator.SetTrigger("Idle");
             }
@@ -51,7 +52,7 @@ public class BasicPlayer : BasePlayer
 
     public override void Skill()
     {
-        throw new System.NotImplementedException();
+        // TODO SKILL
     }
 
 }

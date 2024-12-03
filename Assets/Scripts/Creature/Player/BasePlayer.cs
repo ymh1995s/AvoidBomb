@@ -1,13 +1,21 @@
+using System;
+using System.Collections;
 using TMPro;
 using UnityEngine;
 using UnityEngine.EventSystems;
 
 public abstract class BasePlayer : ROOTOBJECT
 {
+    protected int hp;
     protected int state;
     private Vector3 destinationPos;
 
-    protected enum State
+    // 리스너 패턴! 그런데 Action을 사용하여 더 짧아진
+    public event Action<float> HpUpdateTrigger;
+
+    public HPBar hpBar;
+
+    protected enum PlayerState
     {
         Idle,
         forward,
@@ -17,46 +25,60 @@ public abstract class BasePlayer : ROOTOBJECT
         skill
     }
 
+    protected enum FireState
+    {
+        Normal,
+        Burning
+    }
+
+    protected enum MasterHP
+    {
+        Basic = 100,
+        FireFIghter = 150
+    }
+
     protected virtual void Start()
     {
-        state = (int)State.Idle;
+        state = (int)PlayerState.Idle;
+        HpUpdateTrigger += hpBar.UpdateHp;
     }
 
     protected virtual void Update()
     {
         Move();
         CheckGoal();
+        IsBurned();
     }
 
     public virtual void Move()
     {
-        if(state == (int)State.Idle)
+        if(state == (int)PlayerState.Idle)
         {
             Vector3 tempDestinationPos = transform.position;
             if (Input.GetKey(KeyCode.W))
             {
                 tempDestinationPos += new Vector3(0, 0, 1);
-                state = (int)State.forward;
+                state = (int)PlayerState.forward;
             }
             else if (Input.GetKey(KeyCode.S))
             {
                 tempDestinationPos += new Vector3(0, 0, -1);
-                state = (int)State.back;
+                state = (int)PlayerState.back;
             }
             else if (Input.GetKey(KeyCode.A))
             {
                 tempDestinationPos += new Vector3(-1, 0, 0);
-                state = (int)State.left;
+                state = (int)PlayerState.left;
             }
             else if (Input.GetKey(KeyCode.D))
             {
                 tempDestinationPos += new Vector3(1, 0, 0);
-                state = (int)State.right;
+                state = (int)PlayerState.right;
             }
 
             if (tempDestinationPos.z > 100 || tempDestinationPos.z < 0 || tempDestinationPos.x > 15 || tempDestinationPos.x < -15)
             {
-                state= (int)State.Idle;
+                state= (int)PlayerState.Idle;
                 print("OUTBOARDER");
             }
             else
@@ -64,7 +86,7 @@ public abstract class BasePlayer : ROOTOBJECT
                 destinationPos = tempDestinationPos;
             }
         }
-        else if(state == (int)State.forward || state == (int)State.left || state == (int)State.right || state == (int)State.back)
+        else if(state == (int)PlayerState.forward || state == (int)PlayerState.left || state == (int)PlayerState.right || state == (int)PlayerState.back)
         {
             Vector3 direction = (destinationPos - transform.position).normalized;
             transform.position += direction * 1f * Time.deltaTime;
@@ -72,23 +94,38 @@ public abstract class BasePlayer : ROOTOBJECT
             if ((transform.position - destinationPos ).magnitude < 0.1f)
             {
                 transform.position = destinationPos;
-                state = (int)State.Idle;
+                state = (int)PlayerState.Idle;
             }
         }
     }
 
+
+
     public virtual void Hit(int damage)
     {
+        hp -= damage;
+        //print($"{hp} remained");
 
+        float hpRetion = hp / (float)MasterHP.Basic;
+        HpUpdateTrigger?.Invoke(hpRetion);
+
+        if (hp <= 0)
+        {
+            Death();
+        }
     }
+
     public virtual void Death()
     {
-
+        //TODO
+        print($"DEATH");
     }
+
     public virtual void Reborn()
     {
-
+        // is this Necessary?
     }
+
     public virtual void CheckGoal()
     {
         if (transform.position.z > 100)
@@ -97,6 +134,20 @@ public abstract class BasePlayer : ROOTOBJECT
         }
     }
 
+    protected virtual void IsBurned()
+    {
+        int xoffsetStart = -30;
+        int yoffsetStart = -15;
+        if (GameManager.Instance.tileManager.tilesInfo[(int)transform.position.x- xoffsetStart, (int)transform.position.z].state- yoffsetStart == Tile.State.Fire)
+        {
+            print("았뜨거뜨거");
+        }
+    }
+
+    IEnumerator Bunrning()
+    {
+        yield return new WaitForSeconds(5f);
+    }
 
     public abstract void Skill();
 }
