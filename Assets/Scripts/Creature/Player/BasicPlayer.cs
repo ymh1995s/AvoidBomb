@@ -4,7 +4,6 @@ using static PlayerState;
 
 public class BasicPlayer : BasePlayer
 {
-    // Update is called once per frame
     private Animator animator;
     int preAnimState = 0;
 
@@ -20,6 +19,7 @@ public class BasicPlayer : BasePlayer
     {
         base.Update();
         CheckAnimState();
+        CheckSkill();
     }
 
     // 직업마다 애니메이션이 다를 수 있으니까 하위 클래스에 배치
@@ -48,13 +48,40 @@ public class BasicPlayer : BasePlayer
             {
                 animator.SetTrigger("Idle");
             }
+            else if (state == (int)ActionState.skill)
+            {
+                animator.SetTrigger("Skill");
+            }
+            else if (state == (int)ActionState.Die)
+            {
+                animator.SetTrigger("Die");
+            }
             preAnimState = state;
         }
     }
 
+    void CheckSkill()
+    {
+        if (state != (int)ActionState.Idle) return;
+        if(Input.GetKey(KeyCode.Space))
+        {
+            Skill();
+        }    
+    }
+
+    protected override void Death()
+    {
+        base.Death();
+    }
+
+    public void AnimTest()
+    {
+        print("왜 안됨?");
+    }
+
     public override void Skill()
     {
-        // TODO SKILL
+        state = (int)ActionState.skill;
     }
 
 }

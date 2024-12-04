@@ -30,6 +30,7 @@ public abstract class BasePlayer : ROOTOBJECT
 
     protected virtual void Update()
     {
+        if (state == (int)ActionState.Die) return;
         Move();
         CheckFireTIle();
         CheckGoal();
@@ -99,9 +100,10 @@ public abstract class BasePlayer : ROOTOBJECT
         }
     }
 
-    public virtual void Death()
+    protected virtual void Death()
     {
         //TODO
+        state = (int)ActionState.Die;
         print($"DEATH");
     }
 

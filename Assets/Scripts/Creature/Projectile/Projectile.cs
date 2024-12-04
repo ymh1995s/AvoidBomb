@@ -34,7 +34,7 @@ public class Projectile : ROOTOBJECT
 
     public void PlayerHit()
     {
-        //GameManager.Instance.player.Hit(damage);
+        GameManager.Instance.player.Hit(damage);
     }
 
     // from GPT

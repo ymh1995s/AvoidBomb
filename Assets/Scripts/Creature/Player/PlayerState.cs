@@ -9,7 +9,8 @@ public class PlayerState
         left,
         right,
         back,
-        skill
+        skill,
+        Die,
     }
 
     public enum FireState
