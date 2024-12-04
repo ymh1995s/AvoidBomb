@@ -23,9 +23,10 @@ public class TileManager : MonoBehaviour
 
     private void Start()
     {
-        //BFS 방문배열 초기화
+        // BFS 방문배열 초기화
         visited = new int[xoffsetEnd - xoffsetStart, yoffsetEnd - yoffsetStart];
 
+        // 바닥 타일 정보 초기화
         tilesInfo = new Tile[xoffsetEnd - xoffsetStart, yoffsetEnd - yoffsetStart];
         for (int i = xoffsetStart; i< xoffsetEnd;i++)
         {
@@ -76,7 +77,7 @@ public class TileManager : MonoBehaviour
                 }
             }
         }
-        // 방문한 곳만 0으로 초기화해서 최적화, 버그 여지는 미지수
+        // 전체 초기화 대신 방문한 곳만 0으로 초기화해서 최적화, 버그 여지는 미지수
         while (optimizationQ.Count > 0)
         {
             var current = optimizationQ.Dequeue();

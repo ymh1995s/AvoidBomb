@@ -24,7 +24,7 @@ public class Projectile : ROOTOBJECT
     {
         startPos = transform.position;
         //targetPos = new Vector3(Random.Range(-15f, 15f), 0f, Random.Range(10f, 30f));
-        targetPos = GameManager.Instance.player.transform.position;
+        targetPos = GameManager.Instance.player.transform.position; // 플레이어 타겟 테스트
     }
 
     protected virtual void Update()

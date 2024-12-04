@@ -5,7 +5,6 @@ public class GameManager : MonoBehaviour
     public BasePlayer player;
     public TileManager tileManager;
 
-
     #region SINGLETON
     public static GameManager Instance { get; private set; }
     private void Awake()
@@ -18,8 +17,6 @@ public class GameManager : MonoBehaviour
 
         Instance = this;
         DontDestroyOnLoad(gameObject); // 씬 전환 시 유지
-
-           
     }
     #endregion
 

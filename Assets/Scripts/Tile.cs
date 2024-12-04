@@ -8,7 +8,7 @@ public class Tile : MonoBehaviour
     public delegate void DHitTrigger(Tile tile, int indexY, int indexX);
     public event DHitTrigger HitTrigger;
     
-    // Y X는 확인용으로, 실제 사용되진 않음
+    // Y X는 BFS용도로
     public int indexY { get; set; }
     public int indexX { get; set; }
     public GameObject Hitffect;

@@ -7,22 +7,24 @@ using static PlayerState;
 
 public abstract class BasePlayer : ROOTOBJECT
 {
-    protected int hp;
-    protected int state;
+    protected int hp,maxHp;
+    protected int state = (int)ActionState.Idle;
     private Vector3 destinationPos;
 
     // 리스너 패턴! 그런데 Action을 사용하여 더 짧아진
-    public event Action<float> HpUpdateTrigger;
+    public event Action<int, int> HpUpdateTrigger;
 
+    // 하위 스크립트
     public HPBar hpBar;
-
+    
+    // 화염 도트딜
     Coroutine FireCoroutine = null;
     int remainedBurningTime = 0;
 
 
     protected virtual void Start()
     {
-        state = (int)ActionState.Idle;
+        // 구독
         HpUpdateTrigger += hpBar.UpdateHp;
     }
 
@@ -89,8 +91,7 @@ public abstract class BasePlayer : ROOTOBJECT
         hp -= damage;
         //print($"{hp} remained");
 
-        float hpRetion = hp / (float)MasterHP.Basic;
-        HpUpdateTrigger?.Invoke(hpRetion);
+        HpUpdateTrigger?.Invoke(hp, maxHp);
 
         if (hp <= 0)
         {
@@ -133,9 +134,10 @@ public abstract class BasePlayer : ROOTOBJECT
     {
         while(remainedBurningTime>0)
         {
-            hp--;
-            Debug.Log($"{remainedBurningTime} {hp} time/hp remained");
+            hp--; // 딜 조정 인터페이스를 열어둘 필요는 있음
             remainedBurningTime--;
+            HpUpdateTrigger?.Invoke(hp, maxHp);
+            Debug.Log($"{remainedBurningTime} {hp} time/hp remained");
             yield return new WaitForSeconds(1f);
         }
         FireCoroutine = null;

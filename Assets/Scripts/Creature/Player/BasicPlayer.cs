@@ -11,7 +11,8 @@ public class BasicPlayer : BasePlayer
     protected override void Start()
     {
         base.Start();
-        hp = (int)MasterHP.Basic;
+        maxHp = (int)MasterHP.Basic;
+        hp = maxHp;
         animator = GetComponent<Animator>();
     }
 
@@ -21,8 +22,8 @@ public class BasicPlayer : BasePlayer
         CheckAnimState();
     }
 
-    // 직업마다 애니메이션이 다를 수 있으니까 여기에 놨음
-    // 루키스 방식(3강 유니티)으로 더티플래그 형식으로 빼면 부하를 줄일 수 있긴 할거같은데
+    // 직업마다 애니메이션이 다를 수 있으니까 하위 클래스에 배치
+    // 루키스 방식(3강 유니티)으로 더티플래그 형식으로 빼서 최적화 여지 있음
     void CheckAnimState()
     {
         if(preAnimState!= state)
