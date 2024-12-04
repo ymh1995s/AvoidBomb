@@ -45,11 +45,10 @@ public class TileManager : MonoBehaviour
 
     public void OnProjectileHitHandler(Tile tile, int indexY, int indexX)
     {
-        // 직격!
+        // 해당 타일 화염!
         tile.ActivateFIre(true);
 
-        // 반경화염!
-        // This is BFS!
+        // BFS 반경화염!
         //Array.Clear(visited, 0, visited.Length);
         Queue<ValueTuple<int, int>> q = new Queue<ValueTuple<int, int>>();
         Queue<ValueTuple<int, int>> optimizationQ = new Queue<ValueTuple<int, int>>();
@@ -77,9 +76,7 @@ public class TileManager : MonoBehaviour
                 }
             }
         }
-
-        // 전체 배열을 0으로 초기화 하면 계산이 못따라가서
-        // 방문한 곳만 0으로 초기화하면 최적화가 되지 않을까?
+        // 방문한 곳만 0으로 초기화해서 최적화, 버그 여지는 미지수
         while (optimizationQ.Count > 0)
         {
             var current = optimizationQ.Dequeue();
