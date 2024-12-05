@@ -1,9 +1,6 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
-using System.Drawing;
-using Unity.Burst.Intrinsics;
-using UnityEditor.Rendering;
 using UnityEngine;
 
 public class TileManager : MonoBehaviour
@@ -12,10 +9,14 @@ public class TileManager : MonoBehaviour
     public Tile[,] tilesInfo; // X Y 기준으로 통일함
     public GameObject tileParent;
 
-    private int xoffsetStart = -30;
-    private int xoffsetEnd = 30;
-    private int yoffsetStart = -15;
-    private int yoffsetEnd = 150;
+    //private const int xoffsetStart = -30;
+    //private const int xoffsetEnd = 30;
+    //private const int yoffsetStart = -15;
+    //private const int yoffsetEnd = 150;
+    private const int xoffsetStart = -15;
+    private const int xoffsetEnd = 15;
+    private const int yoffsetStart = -15;
+    private const int yoffsetEnd = 20;
 
     // For BFS
     int[] dy = { -1, 0, 0, 1 };
@@ -24,14 +25,20 @@ public class TileManager : MonoBehaviour
 
     private void Start()
     {
+        Init();
+        StartCoroutine(SetRandomObstacle());
+    }   
+
+    void Init()
+    {
         // BFS 방문배열 초기화
         visited = new int[xoffsetEnd - xoffsetStart, yoffsetEnd - yoffsetStart];
 
         // 바닥 타일 정보 초기화
         tilesInfo = new Tile[xoffsetEnd - xoffsetStart, yoffsetEnd - yoffsetStart];
-        for (int i = xoffsetStart; i< xoffsetEnd;i++)
+        for (int i = xoffsetStart; i < xoffsetEnd; i++)
         {
-            for (int j = yoffsetStart; j< yoffsetEnd;j++)
+            for (int j = yoffsetStart; j < yoffsetEnd; j++)
             {
                 Vector3 thisTilePos = new Vector3(i, -0.05f, j);
                 int thisXoffset = i - xoffsetStart;
@@ -44,9 +51,27 @@ public class TileManager : MonoBehaviour
                 tilesInfo[thisXoffset, thisYoffset].HitTrigger += OnProjectileHitHandler;
             }
         }
-    }   
+    }
 
-    public void OnProjectileHitHandler(Tile tile, int indexY, int indexX)
+    //void SetRandomObstacle()
+    IEnumerator SetRandomObstacle()
+    {
+        // 1초 대기 안하면 Start 꼬여서 Aniamator를 못찾음
+        yield return new WaitForSeconds(1f);
+        int maxObstacleCount = UnityEngine.Random.Range(50, 100);
+        Debug.Log($"{maxObstacleCount} Created..");
+
+        for(int i = 0;i < maxObstacleCount; i++)
+        {
+            int randomX = UnityEngine.Random.Range(0, xoffsetEnd - xoffsetStart);
+            int randomY = UnityEngine.Random.Range(0, yoffsetEnd - yoffsetStart);
+
+            Debug.Log($"{randomX} {randomY}");
+            tilesInfo[randomX, randomY].SetObstacle();
+        }
+    }
+
+    public void OnProjectileHitHandler(Tile tile, int indexX, int indexY)
     {
         // 해당 타일 화염!
         tile.ActivateFIre(true);
@@ -55,27 +80,27 @@ public class TileManager : MonoBehaviour
         //Array.Clear(visited, 0, visited.Length);
         Queue<ValueTuple<int, int>> q = new Queue<ValueTuple<int, int>>();
         Queue<ValueTuple<int, int>> optimizationQ = new Queue<ValueTuple<int, int>>();
-        q.Enqueue((indexY, indexX));
-        optimizationQ.Enqueue((indexY, indexX));
+        q.Enqueue((indexX, indexY));
+        optimizationQ.Enqueue((indexX, indexY));
 
         while (q.Count > 0)
         {
             var current = q.Dequeue();
-            int y = current.Item1;
-            int x = current.Item2;
+            int x = current.Item1;
+            int y = current.Item2;
 
             for (int i = 0; i < 4; i++)
             {
-                int ny = y + dy[i];
                 int nx = x + dx[i];
+                int ny = y + dy[i];
 
-                if (ny < 0 || nx < 0 || visited[ny, nx] != 0) continue;
-                visited[ny, nx] = visited[y, x] + 1;
-                optimizationQ.Enqueue((ny, nx));
-                if (visited[ny, nx] < 2)
+                if (ny < 0 || nx < 0 || visited[nx, ny] != 0) continue;
+                visited[nx, ny] = visited[x, y] + 1;
+                optimizationQ.Enqueue((nx, ny));
+                if (visited[nx, ny] < 2)
                 {
-                    q.Enqueue((ny, nx));
-                    tilesInfo[ny, nx].ActivateFIre(false);
+                    q.Enqueue((nx, ny));
+                    tilesInfo[nx, ny].ActivateFIre(false);
                 }
             }
         }

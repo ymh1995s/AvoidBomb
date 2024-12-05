@@ -712,6 +712,63 @@ MonoBehaviour:
   m_LightCookieSize: {x: 1, y: 1}
   m_LightCookieOffset: {x: 0, y: 0}
   m_SoftShadowQuality: 1
+--- !u!1001 &533026690
+PrefabInstance:
+  m_ObjectHideFlags: 0
+  serializedVersion: 2
+  m_Modification:
+    serializedVersion: 3
+    m_TransformParent: {fileID: 0}
+    m_Modifications:
+    - target: {fileID: 3512583292495768116, guid: 4d7e83de2c1655844a499d99d6fa1c17, type: 3}
+      propertyPath: m_LocalPosition.x
+      value: -0.2305355
+      objectReference: {fileID: 0}
+    - target: {fileID: 3512583292495768116, guid: 4d7e83de2c1655844a499d99d6fa1c17, type: 3}
+      propertyPath: m_LocalPosition.y
+      value: 6.95
+      objectReference: {fileID: 0}
+    - target: {fileID: 3512583292495768116, guid: 4d7e83de2c1655844a499d99d6fa1c17, type: 3}
+      propertyPath: m_LocalPosition.z
+      value: 1.8309593
+      objectReference: {fileID: 0}
+    - target: {fileID: 3512583292495768116, guid: 4d7e83de2c1655844a499d99d6fa1c17, type: 3}
+      propertyPath: m_LocalRotation.w
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 3512583292495768116, guid: 4d7e83de2c1655844a499d99d6fa1c17, type: 3}
+      propertyPath: m_LocalRotation.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 3512583292495768116, guid: 4d7e83de2c1655844a499d99d6fa1c17, type: 3}
+      propertyPath: m_LocalRotation.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 3512583292495768116, guid: 4d7e83de2c1655844a499d99d6fa1c17, type: 3}
+      propertyPath: m_LocalRotation.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 3512583292495768116, guid: 4d7e83de2c1655844a499d99d6fa1c17, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 3512583292495768116, guid: 4d7e83de2c1655844a499d99d6fa1c17, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 3512583292495768116, guid: 4d7e83de2c1655844a499d99d6fa1c17, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 7853869528751204742, guid: 4d7e83de2c1655844a499d99d6fa1c17, type: 3}
+      propertyPath: m_Name
+      value: Tile
+      objectReference: {fileID: 0}
+    m_RemovedComponents: []
+    m_RemovedGameObjects: []
+    m_AddedGameObjects: []
+    m_AddedComponents: []
+  m_SourcePrefab: {fileID: 100100000, guid: 4d7e83de2c1655844a499d99d6fa1c17, type: 3}
 --- !u!4 &571945958 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 297505096059356156, guid: 607eb24355c1d1f4db67d248d389cce3, type: 3}
@@ -827,6 +884,37 @@ Transform:
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!1 &897201523
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 897201524}
+  m_Layer: 0
+  m_Name: NewTileTest
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &897201524
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 897201523}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: -12.901597, y: 1.1251719, z: 11.999628}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -1607,6 +1695,10 @@ PrefabInstance:
       propertyPath: m_TagString
       value: Player
       objectReference: {fileID: 0}
+    - target: {fileID: 695498796338696999, guid: 607eb24355c1d1f4db67d248d389cce3, type: 3}
+      propertyPath: tilemanager
+      value: 
+      objectReference: {fileID: 2038171368}
     - target: {fileID: 1350506046927336472, guid: 607eb24355c1d1f4db67d248d389cce3, type: 3}
       propertyPath: m_LocalPosition.x
       value: 0
@@ -1808,3 +1900,5 @@ SceneRoots:
   - {fileID: 2038171369}
   - {fileID: 1834359872}
   - {fileID: 2070175922}
+  - {fileID: 533026690}
+  - {fileID: 897201524}

@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using Unity.VisualScripting;
 using UnityEngine;
@@ -7,12 +8,15 @@ public class Tile : MonoBehaviour
     // 리스너 패턴!
     public delegate void DHitTrigger(Tile tile, int indexY, int indexX);
     public event DHitTrigger HitTrigger;
+
+    //
+    public Animator animator;
     
     // Y X는 BFS용도로
     public int indexY { get; set; }
     public int indexX { get; set; }
     public GameObject Hitffect;
-    private Coroutine fireCoroutine;
+    private Coroutine coFire;
     public State state;
 
     public enum State
@@ -25,10 +29,15 @@ public class Tile : MonoBehaviour
     private void Start()
     {
         state = State.None;
+
+        animator = GetComponent<Animator>();
     }
 
     public void ActivateFIre(bool directHit)
     {
+        if (state == State.Obstacle)
+            return;
+
         if(directHit ==true)
         {
             // TODO : 직격 데미지
@@ -38,15 +47,15 @@ public class Tile : MonoBehaviour
 
         if(state==State.Fire)
         {
-            StopCoroutine(fireCoroutine);
+            StopCoroutine(coFire);
         }
-        fireCoroutine = StartCoroutine(DoFireEffect());
+        coFire = StartCoroutine(CoFireEffect());
     }
 
-    IEnumerator DoFireEffect()
+    IEnumerator CoFireEffect()
     {
-        //state = State.Fire;
-        //Hitffect.SetActive(true);
+        state = State.Fire;
+        Hitffect.SetActive(true);
         yield return new WaitForSeconds(3);
         Hitffect.SetActive(false);
         state = State.None;
@@ -64,7 +73,14 @@ public class Tile : MonoBehaviour
             }
 
             Destroy(other.gameObject);
-            HitTrigger?.Invoke(this, indexY, indexX);
+            HitTrigger?.Invoke(this, indexX, indexY);
         }
     }
+
+    public void SetObstacle()
+    {
+        state = State.Obstacle;
+        animator.Play("Create");
+    }
+
 }

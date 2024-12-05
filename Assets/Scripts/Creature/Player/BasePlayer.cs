@@ -13,7 +13,9 @@ public abstract class BasePlayer : ROOTOBJECT
     private Vector3 destinationPos;
 
     // 1205테스트 기준 시작 값 30,15
-    const int startPosX = 30;
+    //const int startPosX = 30;
+    //const int startPosY = 15;
+    const int startPosX = 15;
     const int startPosY = 15;
     public int currentPosX { get; private set; } = startPosX;
     public int currentPosY { get; private set; } = startPosY;
@@ -46,27 +48,32 @@ public abstract class BasePlayer : ROOTOBJECT
 
     public virtual void Move()
     {
+        
         // Idle(움직임기 가능함) => Move
         if(state == (int)ActionState.Idle)
         {
             Vector3 tempDestinationPos = transform.position;
             if (Input.GetKey(KeyCode.W))
             {
+                if (tilemanager.tilesInfo[currentPosX, currentPosY + 1].state == Tile.State.Obstacle) return;
                 tempDestinationPos = tilemanager.tilesInfo[currentPosX, ++currentPosY].transform.position;
                 state = (int)ActionState.forward;
             }
             else if (Input.GetKey(KeyCode.S))
             {
+                if (tilemanager.tilesInfo[currentPosX, currentPosY - 1].state == Tile.State.Obstacle) return;
                 tempDestinationPos = tilemanager.tilesInfo[currentPosX, --currentPosY].transform.position;
                 state = (int)ActionState.back;
             }
             else if (Input.GetKey(KeyCode.A))
             {
+                if (tilemanager.tilesInfo[currentPosX-1, currentPosY].state == Tile.State.Obstacle) return;
                 tempDestinationPos = tilemanager.tilesInfo[--currentPosX, currentPosY].transform.position;
                 state = (int)ActionState.left;
             }
             else if (Input.GetKey(KeyCode.D))
             {
+                if (tilemanager.tilesInfo[currentPosX+1, currentPosY].state == Tile.State.Obstacle) return;
                 tempDestinationPos = tilemanager.tilesInfo[++currentPosX, currentPosY].transform.position;
                 state = (int)ActionState.right;
             }
@@ -86,9 +93,9 @@ public abstract class BasePlayer : ROOTOBJECT
         else if(state == (int)ActionState.forward || state == (int)ActionState.left || state == (int)ActionState.right || state == (int)ActionState.back)
         {
             Vector3 direction = (destinationPos - transform.position).normalized;
-            transform.position += direction * 1f * Time.deltaTime;
+            transform.position += direction * 1.5f * Time.deltaTime;
 
-            if ((transform.position - destinationPos ).magnitude < 0.1f)
+            if ((transform.position - destinationPos ).magnitude < 0.2f)
             {
                 transform.position = destinationPos;
                 state = (int)ActionState.Idle;
