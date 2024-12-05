@@ -3,12 +3,13 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Drawing;
 using Unity.Burst.Intrinsics;
+using UnityEditor.Rendering;
 using UnityEngine;
 
 public class TileManager : MonoBehaviour
 {
     public GameObject tilePrefab;
-    public Tile[,] tilesInfo;
+    public Tile[,] tilesInfo; // X Y 기준으로 통일함
     public GameObject tileParent;
 
     private int xoffsetStart = -30;
@@ -37,8 +38,9 @@ public class TileManager : MonoBehaviour
                 int thisYoffset = j - yoffsetStart;
                 GameObject thisTile = Instantiate(tilePrefab, thisTilePos, Quaternion.identity, tileParent.transform);
                 tilesInfo[thisXoffset, thisYoffset] = thisTile.GetComponent<Tile>();
-                tilesInfo[thisXoffset, thisYoffset].indexY = thisXoffset;
-                tilesInfo[thisXoffset, thisYoffset].indexX = thisYoffset;
+                tilesInfo[thisXoffset, thisYoffset].indexX = thisXoffset;
+                tilesInfo[thisXoffset, thisYoffset].indexY = thisYoffset;
+                tilesInfo[thisXoffset, thisYoffset].name = $"tile [{thisXoffset},{thisYoffset}]";
                 tilesInfo[thisXoffset, thisYoffset].HitTrigger += OnProjectileHitHandler;
             }
         }
