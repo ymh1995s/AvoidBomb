@@ -138,7 +138,8 @@ public abstract class BasePlayer : ROOTOBJECT
         RaycastHit hit;
         if (Physics.Raycast(transform.position , Vector3.down, out hit, 10))
         {
-            Tile tile = hit.transform.GetComponent<Tile>();
+            Tile tile = hit.transform.parent.GetComponent<Tile>();
+            if (tile == null) return;
             if(tile.state == Tile.State.Fire)
             {
                 remainedBurningTime = 5;

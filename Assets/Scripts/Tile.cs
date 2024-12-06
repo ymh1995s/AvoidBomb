@@ -9,13 +9,17 @@ public class Tile : MonoBehaviour
     public delegate void DHitTrigger(Tile tile, int indexY, int indexX);
     public event DHitTrigger HitTrigger;
 
+    // 하위 객체
+    public GameObject Ground;
+    public GameObject Obstacle;
+    public GameObject Hitffect;
+
     //
     public Animator animator;
     
     // Y X는 BFS용도로
     public int indexY { get; set; }
     public int indexX { get; set; }
-    public GameObject Hitffect;
     private Coroutine coFire;
     public State state;
 
@@ -65,15 +69,22 @@ public class Tile : MonoBehaviour
     {
         if (other.CompareTag("Projectile"))
         {
+            Destroy(other.gameObject);
+
             Projectile projectile = other.GetComponent<Projectile>();
             Vector3 playerPos = GameManager.Instance.player.transform.position;
+            // TODO 플레이어 히트는 플레이어에서 처리
             if((int)playerPos.x == transform.position.x && (int)playerPos.z == transform.position.z)
             {
                 projectile.PlayerHit();
             }
 
-            Destroy(other.gameObject);
-            HitTrigger?.Invoke(this, indexX, indexY);
+
+            if (state == State.Obstacle) return;
+            else
+            {
+                HitTrigger?.Invoke(this, indexX, indexY);
+            }           
         }
     }
 

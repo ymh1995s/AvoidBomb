@@ -66,7 +66,7 @@ public class TileManager : MonoBehaviour
             int randomX = UnityEngine.Random.Range(0, xoffsetEnd - xoffsetStart);
             int randomY = UnityEngine.Random.Range(0, yoffsetEnd - yoffsetStart);
 
-            Debug.Log($"{randomX} {randomY}");
+            //Debug.Log($"{randomX} {randomY}");
             tilesInfo[randomX, randomY].SetObstacle();
         }
     }
