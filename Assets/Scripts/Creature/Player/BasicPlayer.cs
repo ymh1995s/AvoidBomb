@@ -76,7 +76,7 @@ public class BasicPlayer : BasePlayer
 
     public void AnimTest()
     {
-        print("왜 안됨?");
+        print("Anim Event Test");
     }
 
     public override void Skill()

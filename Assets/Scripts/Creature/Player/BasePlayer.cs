@@ -4,6 +4,8 @@ using TMPro;
 using UnityEngine;
 using UnityEngine.EventSystems;
 using static PlayerState;
+using static Tile;
+using static UnityEngine.Rendering.VolumeComponent;
 
 
 public abstract class BasePlayer : ROOTOBJECT
@@ -12,13 +14,10 @@ public abstract class BasePlayer : ROOTOBJECT
     protected int state = (int)ActionState.Idle;
     private Vector3 destinationPos;
 
-    // 1205테스트 기준 시작 값 30,15
-    //const int startPosX = 30;
-    //const int startPosY = 15;
-    const int startPosX = 15;
-    const int startPosY = 15;
-    public int currentPosX { get; private set; } = startPosX;
-    public int currentPosY { get; private set; } = startPosY;
+    public int startPosX { get; private set; }
+    public int startPosY { get; private set; }
+    public int currentPosX { get; private set; }
+    public int currentPosY { get; private set; }
 
     // 리스너 패턴! 그런데 Action을 사용하여 더 짧아진
     public event Action<int, int> HpUpdateTrigger;
@@ -36,6 +35,8 @@ public abstract class BasePlayer : ROOTOBJECT
     {
         // 구독
         HpUpdateTrigger += hpBar.UpdateHp;
+        currentPosX = startPosX = tilemanager.xoffsetEnd;
+        currentPosY = startPosY = tilemanager.yoffsetStart;
     }
 
     protected virtual void Update()
@@ -52,44 +53,41 @@ public abstract class BasePlayer : ROOTOBJECT
         // Idle(움직임기 가능함) => Move
         if(state == (int)ActionState.Idle)
         {
-            Vector3 tempDestinationPos = transform.position;
+            ValueTuple<int, int> ReservePos = (currentPosX, currentPosY);
             if (Input.GetKey(KeyCode.W))
             {
-                if (tilemanager.tilesInfo[currentPosX, currentPosY + 1].state == Tile.State.Obstacle) return;
-                tempDestinationPos = tilemanager.tilesInfo[currentPosX, ++currentPosY].transform.position;
+                ReservePos.Item2++;
                 state = (int)ActionState.forward;
             }
             else if (Input.GetKey(KeyCode.S))
             {
-                if (tilemanager.tilesInfo[currentPosX, currentPosY - 1].state == Tile.State.Obstacle) return;
-                tempDestinationPos = tilemanager.tilesInfo[currentPosX, --currentPosY].transform.position;
+                ReservePos.Item2--;
                 state = (int)ActionState.back;
             }
             else if (Input.GetKey(KeyCode.A))
             {
-                if (tilemanager.tilesInfo[currentPosX-1, currentPosY].state == Tile.State.Obstacle) return;
-                tempDestinationPos = tilemanager.tilesInfo[--currentPosX, currentPosY].transform.position;
+                ReservePos.Item1--;
                 state = (int)ActionState.left;
             }
             else if (Input.GetKey(KeyCode.D))
             {
-                if (tilemanager.tilesInfo[currentPosX+1, currentPosY].state == Tile.State.Obstacle) return;
-                tempDestinationPos = tilemanager.tilesInfo[++currentPosX, currentPosY].transform.position;
+                ReservePos.Item1++;
                 state = (int)ActionState.right;
             }
 
-            // 임의로 정한 보더라 나중에 하드 코딩 제거
-            if (tempDestinationPos.z > 100 || tempDestinationPos.z < 0 || tempDestinationPos.x > 15 || tempDestinationPos.x < -15)
+            if(CanGo(ReservePos))
             {
-                state= (int)ActionState.Idle;
-                print("OUTBOARDER");
+                currentPosX = ReservePos.Item1;
+                currentPosY = ReservePos.Item2;
+                destinationPos = tilemanager.tilesInfo[currentPosX, currentPosY].transform.position;
             }
             else
             {
-                destinationPos = tempDestinationPos;
+                state = (int)ActionState.Idle;
             }
         }
-        // 이미 움직이는중인데 목적지 도착? Idle : Notrhing
+
+        // 이미 움직이는중인데 목적지 도착? Idle : Nothing
         else if(state == (int)ActionState.forward || state == (int)ActionState.left || state == (int)ActionState.right || state == (int)ActionState.back)
         {
             Vector3 direction = (destinationPos - transform.position).normalized;
@@ -101,6 +99,26 @@ public abstract class BasePlayer : ROOTOBJECT
                 state = (int)ActionState.Idle;
             }
         }
+    }
+
+    bool CanGo(ValueTuple<int, int> value)
+    {
+        // 범위 체크
+        if(value.Item1 >= (tilemanager.xoffsetEnd - tilemanager.xoffsetStart) || value.Item1 < 0
+            || value.Item2>= tilemanager.yoffsetEnd || value.Item2<0)
+        {
+            Debug.Log("OUTBOARDER");
+            return false;
+        }
+
+        // 장애물 체크
+        if (tilemanager.tilesInfo[value.Item1, value.Item2].state == Tile.State.Obstacle)
+        {
+            Debug.Log("OBSTACLE");
+            return false;
+        }
+
+        return true;
     }
 
     public virtual void Hit(int damage)
@@ -133,12 +151,15 @@ public abstract class BasePlayer : ROOTOBJECT
 
     protected virtual void CheckFireTIle()
     {
+        // 아마 레이관련인거같은데 게임 시작 후 아직 움직이지 않았을 때 화염 감지 못함
+        // 시작인 상태를 감안할 때 냅둬도 될 듯
+        // 후순위 TODO로 나중에 픽스
         Debug.DrawRay(transform.position , Vector3.down, Color.red);
 
         RaycastHit hit;
         if (Physics.Raycast(transform.position , Vector3.down, out hit, 10))
         {
-            Tile tile = hit.transform.parent.GetComponent<Tile>();
+            Tile tile = hit.transform.GetComponent<Tile>();
             if (tile == null) return;
             if(tile.state == Tile.State.Fire)
             {
@@ -146,6 +167,17 @@ public abstract class BasePlayer : ROOTOBJECT
                 if(FireCoroutine == null)
                     FireCoroutine = StartCoroutine(Bunrning());
             }
+        }
+    }
+
+    private void OnTriggerEnter(Collider other)
+    {
+        // TODO : 나중에는 Bomb와 Missile로 분기처리괴 될 수 있으니 레이어도 고려
+        if (other.CompareTag("Projectile"))
+        {
+            Destroy(other.gameObject);
+            Projectile projectile = other.GetComponent<Projectile>();
+            Hit(projectile.damage);
         }
     }
 

@@ -9,14 +9,11 @@ public class TileManager : MonoBehaviour
     public Tile[,] tilesInfo; // X Y 기준으로 통일함
     public GameObject tileParent;
 
-    //private const int xoffsetStart = -30;
-    //private const int xoffsetEnd = 30;
-    //private const int yoffsetStart = -15;
-    //private const int yoffsetEnd = 150;
-    private const int xoffsetStart = -15;
-    private const int xoffsetEnd = 15;
-    private const int yoffsetStart = -15;
-    private const int yoffsetEnd = 20;
+    // x y 기준 값
+    public int xoffsetStart { get; private set; } = -15;
+    public int xoffsetEnd { get; private set; } = 15;
+    public int yoffsetStart { get; private set; } = 0;
+    public int yoffsetEnd { get; private set; } = 60;
 
     // For BFS
     int[] dy = { -1, 0, 0, 1 };
@@ -53,12 +50,11 @@ public class TileManager : MonoBehaviour
         }
     }
 
-    //void SetRandomObstacle()
     IEnumerator SetRandomObstacle()
     {
         // 1초 대기 안하면 Start 꼬여서 Aniamator를 못찾음
         yield return new WaitForSeconds(1f);
-        int maxObstacleCount = UnityEngine.Random.Range(5, 10);
+        int maxObstacleCount = UnityEngine.Random.Range(30, 50);
         Debug.Log($"{maxObstacleCount} Created..");
 
         for(int i = 0;i < maxObstacleCount; i++)
@@ -94,17 +90,17 @@ public class TileManager : MonoBehaviour
                 int nx = x + dx[i];
                 int ny = y + dy[i];
 
-                if (ny < 0 || nx < 0 || visited[nx, ny] != 0) continue;
+                if (ny < 0 || nx < 0 || ny >= yoffsetEnd || nx >= (xoffsetEnd - xoffsetStart) || visited[nx, ny] != 0) continue;
                 visited[nx, ny] = visited[x, y] + 1;
                 optimizationQ.Enqueue((nx, ny));
-                if (visited[nx, ny] < 2)
+                if (visited[nx, ny] <= 2)
                 {
                     q.Enqueue((nx, ny));
                     tilesInfo[nx, ny].ActivateFIre(false);
                 }
             }
         }
-        // 전체 초기화 대신 방문한 곳만 0으로 초기화해서 최적화, 버그 여지는 미지수
+        // 전체 초기화 대신 방문한 곳만 0으로 초기화해서 최적화
         while (optimizationQ.Count > 0)
         {
             var current = optimizationQ.Dequeue();

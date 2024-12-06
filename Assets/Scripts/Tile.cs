@@ -58,8 +58,8 @@ public class Tile : MonoBehaviour
 
     IEnumerator CoFireEffect()
     {
-        //state = State.Fire;
-        //Hitffect.SetActive(true);
+        state = State.Fire;
+        Hitffect.SetActive(true);
         yield return new WaitForSeconds(3);
         Hitffect.SetActive(false);
         state = State.None;
@@ -71,15 +71,16 @@ public class Tile : MonoBehaviour
         {
             Destroy(other.gameObject);
 
-            Projectile projectile = other.GetComponent<Projectile>();
-            Vector3 playerPos = GameManager.Instance.player.transform.position;
-            // TODO 플레이어 히트는 플레이어에서 처리
-            if((int)playerPos.x == transform.position.x && (int)playerPos.z == transform.position.z)
-            {
-                projectile.PlayerHit();
-            }
+            //// TODO 플레이어 히트는 플레이어에서 처리
+            //Projectile projectile = other.GetComponent<Projectile>();
 
+            //Vector3 playerPos = GameManager.Instance.player.transform.position;
+            //if((int)playerPos.x == transform.position.x && (int)playerPos.z == transform.position.z)
+            //{
+            //    projectile.PlayerHit();
+            //}
 
+            // 화염 이벤트
             if (state == State.Obstacle) return;
             else
             {
@@ -93,5 +94,4 @@ public class Tile : MonoBehaviour
         state = State.Obstacle;
         animator.Play("Create");
     }
-
 }

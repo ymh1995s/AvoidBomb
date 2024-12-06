@@ -4,7 +4,7 @@ using UnityEngine;
 public class ProjectileSpawner : MonoBehaviour
 {
     public GameObject bomb;
-    public GameObject missile;
+    public GameObject missile; // TODO
 
     void Start()
     {
