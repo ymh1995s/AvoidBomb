@@ -35,7 +35,8 @@ public class Projectile : ROOTOBJECT
         //int randomY = Random.Range(0, yoffsetEnd - yoffsetStart);
 
         // TODO : 이것도 좌표 받아서 유효한 범위로 설정해야됨. 지금은 귀찮아서 대충 유효범위 하드코딩
-        targetPos = new Vector3(Random.Range(-5f, 5f), 0f, Random.Range(-15, 10f));
+        //targetPos = new Vector3(Random.Range(-5f, 5f), 0f, Random.Range(-15, 10f));
+        targetPos = GameManager.Instance.player.transform.position; // 플레이어 타겟 테스트
     }
 
     protected virtual void Update()

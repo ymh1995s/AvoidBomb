@@ -58,7 +58,7 @@ public class TileManager : MonoBehaviour
     {
         // 1초 대기 안하면 Start 꼬여서 Aniamator를 못찾음
         yield return new WaitForSeconds(1f);
-        int maxObstacleCount = UnityEngine.Random.Range(50, 100);
+        int maxObstacleCount = UnityEngine.Random.Range(5, 10);
         Debug.Log($"{maxObstacleCount} Created..");
 
         for(int i = 0;i < maxObstacleCount; i++)

@@ -58,8 +58,8 @@ public class Tile : MonoBehaviour
 
     IEnumerator CoFireEffect()
     {
-        state = State.Fire;
-        Hitffect.SetActive(true);
+        //state = State.Fire;
+        //Hitffect.SetActive(true);
         yield return new WaitForSeconds(3);
         Hitffect.SetActive(false);
         state = State.None;
