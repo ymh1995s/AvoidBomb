@@ -1,5 +1,7 @@
 using TMPro;
 using UnityEngine;
+using UnityEngine.UIElements;
+using static Cinemachine.CinemachineTargetGroup;
 using static UnityEngine.GraphicsBuffer;
 
 public class Projectile : ROOTOBJECT
@@ -11,7 +13,7 @@ public class Projectile : ROOTOBJECT
     protected int fireDuration;
 
     private Vector3 shootStartPos;   // 발사대 위치
-    public float moveDuration = 3f;  // 이동 시간 (3초)
+    public float moveDuration = 10f;  // 이동 시간 (3초)
     private float timeElapsed = 0f;  // 경과 시간
 
     public TileManager tileManager;
@@ -21,7 +23,7 @@ public class Projectile : ROOTOBJECT
 
     protected enum MasterDamage
     {
-        Bomb = 0,
+        Bomb = 10,
         Missile = 40
     }
 
@@ -33,8 +35,13 @@ public class Projectile : ROOTOBJECT
         maxRangeX = tileManager.xoffsetEnd - tileManager.xoffsetStart;
         maxRangeY = tileManager.yoffsetEnd;
 
-        targetPos = tileManager.tilesInfo[Random.Range(0, maxRangeX), Random.Range(0, maxRangeY)].transform.position;
-        //targetPos = GameManager.Instance.player.transform.position; // 플레이어 타겟 테스트
+        //targetPos = tileManager.tilesInfo[Random.Range(0, maxRangeX), Random.Range(0, maxRangeY)].transform.position;
+        targetPos = GameManager.Instance.player.transform.position; // 플레이어 타겟 테스트
+
+        // 타겟 방향으로 투사체 Rotation
+        Vector3 direction = targetPos - transform.position; 
+        Quaternion lookRotation = Quaternion.LookRotation(direction); 
+        transform.rotation = lookRotation;
     }
 
     protected virtual void Update()
@@ -70,7 +77,7 @@ public class Projectile : ROOTOBJECT
     {
         if(collision.transform.tag=="Obstacle")
         {
-            Destroy(gameObject);
+            //Destroy(gameObject);
         }
     }
 }
