@@ -12,9 +12,9 @@ public class Tile : MonoBehaviour
     // 하위 객체
     public GameObject Ground;
     public GameObject Obstacle;
-    public GameObject Hitffect;
+    public ParticleSystem fireEffect;
 
-    //
+    // 하위 컴포넌트
     public Animator animator;
     
     // Y X는 BFS용도로
@@ -42,13 +42,6 @@ public class Tile : MonoBehaviour
         if (state == State.Obstacle)
             return;
 
-        if(directHit ==true)
-        {
-            // TODO : 직격 데미지
-            // TODO : 삭제
-            // TODO : ??아닌가? 삭제 보류
-        }
-
         if(state==State.Fire)
         {
             StopCoroutine(coFire);
@@ -59,9 +52,9 @@ public class Tile : MonoBehaviour
     IEnumerator CoFireEffect()
     {
         state = State.Fire;
-        Hitffect.SetActive(true);
+        fireEffect.Play();
         yield return new WaitForSeconds(3);
-        Hitffect.SetActive(false);
+        fireEffect.Stop();
         state = State.None;
     }
 
@@ -70,15 +63,6 @@ public class Tile : MonoBehaviour
         if (other.CompareTag("Projectile"))
         {
             Destroy(other.gameObject);
-
-            //// TODO 플레이어 히트는 플레이어에서 처리
-            //Projectile projectile = other.GetComponent<Projectile>();
-
-            //Vector3 playerPos = GameManager.Instance.player.transform.position;
-            //if((int)playerPos.x == transform.position.x && (int)playerPos.z == transform.position.z)
-            //{
-            //    projectile.PlayerHit();
-            //}
 
             // 화염 이벤트
             if (state == State.Obstacle) return;
@@ -91,6 +75,7 @@ public class Tile : MonoBehaviour
 
     public void SetObstacle()
     {
+        Obstacle.SetActive(true);
         state = State.Obstacle;
         animator.Play("Create");
     }

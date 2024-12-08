@@ -29,6 +29,7 @@ public abstract class BasePlayer : ROOTOBJECT
     // 화염 도트딜
     Coroutine FireCoroutine = null;
     int remainedBurningTime = 0;
+    public ParticleSystem fireEffect;
 
 
     protected virtual void Start()
@@ -183,7 +184,8 @@ public abstract class BasePlayer : ROOTOBJECT
 
     IEnumerator Bunrning()
     {
-        while(remainedBurningTime>0)
+        fireEffect.Play();
+        while (remainedBurningTime>0)
         {
             hp--; // 딜 조정 인터페이스를 열어둘 필요는 있음
             remainedBurningTime--;
@@ -191,6 +193,7 @@ public abstract class BasePlayer : ROOTOBJECT
             Debug.Log($"{remainedBurningTime} {hp} time/hp remained");
             yield return new WaitForSeconds(1f);
         }
+        fireEffect.Stop();
         FireCoroutine = null;
     }
 
