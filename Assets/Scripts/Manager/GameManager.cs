@@ -20,4 +20,12 @@ public class GameManager : MonoBehaviour
     }
     #endregion
 
+    private void Update()
+    {
+        // TODO 승리 함수 부하를 줄이기 위해 업데이트 외로 뺌
+        if (player.currentPosY == (tileManager.yoffsetEnd - 1))
+        {
+            print("WIN");
+        }
+    }
 }

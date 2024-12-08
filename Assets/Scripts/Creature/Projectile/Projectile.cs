@@ -23,7 +23,7 @@ public class Projectile : ROOTOBJECT
 
     protected enum MasterDamage
     {
-        Bomb = 10,
+        Bomb = 1,
         Missile = 40
     }
 
@@ -35,8 +35,8 @@ public class Projectile : ROOTOBJECT
         maxRangeX = tileManager.xoffsetEnd - tileManager.xoffsetStart;
         maxRangeY = tileManager.yoffsetEnd;
 
-        //targetPos = tileManager.tilesInfo[Random.Range(0, maxRangeX), Random.Range(0, maxRangeY)].transform.position;
-        targetPos = GameManager.Instance.player.transform.position; // 플레이어 타겟 테스트
+        targetPos = tileManager.tilesInfo[Random.Range(0, maxRangeX), Random.Range(0, maxRangeY)].transform.position;
+        //targetPos = GameManager.Instance.player.transform.position; // 플레이어 타겟 테스트
 
         // 타겟 방향으로 투사체 Rotation
         Vector3 direction = targetPos - transform.position; 
@@ -46,13 +46,13 @@ public class Projectile : ROOTOBJECT
 
     protected virtual void Update()
     {
-        Move();
+       // LateUpdate로 뺌
     }
 
-    //public void PlayerHit()
-    //{
-    //    GameManager.Instance.player.Hit(damage);
-    //}
+    private void LateUpdate()
+    {
+        Move();
+    }
 
     // from GPT
     private void Move()
@@ -70,14 +70,6 @@ public class Projectile : ROOTOBJECT
         {
             // 3초가 지나면 목표 위치로 정확히 도달
             transform.position = targetPos;
-        }
-    }
-
-    private void OnCollisionEnter(Collision collision)
-    {
-        if(collision.transform.tag=="Obstacle")
-        {
-            //Destroy(gameObject);
         }
     }
 }

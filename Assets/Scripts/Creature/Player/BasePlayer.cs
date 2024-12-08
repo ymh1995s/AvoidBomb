@@ -42,15 +42,18 @@ public abstract class BasePlayer : ROOTOBJECT
 
     protected virtual void Update()
     {
+        // LateUpdate로 뺌
+    }
+
+    protected virtual void LateUpdate()
+    {
         if (state == (int)ActionState.Die) return;
         Move();
         CheckFireTIle();
-        CheckGoal();
     }
 
     public virtual void Move()
     {
-        
         // Idle(움직임기 가능함) => Move
         if(state == (int)ActionState.Idle)
         {
@@ -140,14 +143,6 @@ public abstract class BasePlayer : ROOTOBJECT
         //TODO
         state = (int)ActionState.Die;
         print($"DEATH");
-    }
-
-    public virtual void CheckGoal()
-    {
-        if (transform.position.z > 100)
-        {
-            Debug.Log("GOAL");
-        }
     }
 
     protected virtual void CheckFireTIle()

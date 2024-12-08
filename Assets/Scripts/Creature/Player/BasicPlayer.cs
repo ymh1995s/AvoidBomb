@@ -17,7 +17,12 @@ public class BasicPlayer : BasePlayer
 
     protected override void Update()
     {
-        base.Update();
+        // LateUpdate로 뺌
+    }
+
+    protected override void LateUpdate()
+    {
+        base.LateUpdate();
         CheckAnimState();
         CheckSkill();
     }

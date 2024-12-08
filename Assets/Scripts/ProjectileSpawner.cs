@@ -16,7 +16,7 @@ public class ProjectileSpawner : MonoBehaviour
         while (true)
         {
             Instantiate(bomb, transform.position, Quaternion.identity);
-            yield return new WaitForSeconds(0.2f);
+            yield return new WaitForSeconds(3f);
         }
     }
 }
