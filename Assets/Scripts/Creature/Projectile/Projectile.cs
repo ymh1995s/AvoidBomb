@@ -35,8 +35,16 @@ public class Projectile : ROOTOBJECT
         maxRangeX = tileManager.xoffsetEnd - tileManager.xoffsetStart;
         maxRangeY = tileManager.yoffsetEnd;
 
-        targetPos = tileManager.tilesInfo[Random.Range(0, maxRangeX), Random.Range(0, maxRangeY)].transform.position;
-        //targetPos = GameManager.Instance.player.transform.position; // 플레이어 타겟 테스트
+        // 일정 확률로 플레이어 타게팅
+        int quarter = Random.Range(0, 9);
+        if(quarter ==0)
+        {
+            targetPos = GameManager.Instance.player.transform.position; // 플레이어 타겟 테스트
+        }
+        else
+        {
+            targetPos = tileManager.tilesInfo[Random.Range(0, maxRangeX), Random.Range(0, maxRangeY)].transform.position;
+        }
 
         // 타겟 방향으로 투사체 Rotation
         Vector3 direction = targetPos - transform.position; 

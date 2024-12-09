@@ -31,6 +31,7 @@ public abstract class BasePlayer : ROOTOBJECT
     // 하위 컴포넌트
     public Image hitEffect;
     public ParticleSystem fireEffect;
+    AudioSource audio;
 
     protected virtual void Start()
     {
@@ -38,6 +39,9 @@ public abstract class BasePlayer : ROOTOBJECT
         HpUpdateTrigger += hpBar.UpdateHp;
         currentPosX = startPosX = tilemanager.xoffsetEnd;
         currentPosY = startPosY = tilemanager.yoffsetStart;
+
+        // 컴포넌트
+        audio = GetComponent<AudioSource>();
     }
 
     protected virtual void Update()
@@ -58,22 +62,22 @@ public abstract class BasePlayer : ROOTOBJECT
         if(state == (int)ActionState.Idle)
         {
             ValueTuple<int, int> ReservePos = (currentPosX, currentPosY);
-            if (Input.GetKeyDown(KeyCode.W))
+            if (Input.GetKey(KeyCode.W))
             {
                 ReservePos.Item2++;
                 state = (int)ActionState.forward;
             }
-            else if (Input.GetKeyDown(KeyCode.S))
+            else if (Input.GetKey(KeyCode.S))
             {
                 ReservePos.Item2--;
                 state = (int)ActionState.back;
             }
-            else if (Input.GetKeyDown(KeyCode.A))
+            else if (Input.GetKey(KeyCode.A))
             {
                 ReservePos.Item1--;
                 state = (int)ActionState.left;
             }
-            else if (Input.GetKeyDown(KeyCode.D))
+            else if (Input.GetKey(KeyCode.D))
             {
                 ReservePos.Item1++;
                 state = (int)ActionState.right;
@@ -138,6 +142,7 @@ public abstract class BasePlayer : ROOTOBJECT
         }
         else
         {
+            audio.Play();
             StartCoroutine(CoHitEffect());
         }
     }
