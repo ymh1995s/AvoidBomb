@@ -1,6 +1,6 @@
 using Unity.VisualScripting;
 using UnityEngine;
-using static PlayerState;
+using static PlayersEnumInfo;
 
 public class BasicPlayer : BasePlayer
 {

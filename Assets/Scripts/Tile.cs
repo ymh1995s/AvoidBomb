@@ -30,6 +30,9 @@ public class Tile : MonoBehaviour
         Obstacle
     }
 
+    // Fire
+    float FireDuration = 10f;
+
     private void Start()
     {
         state = State.None;
@@ -53,7 +56,7 @@ public class Tile : MonoBehaviour
     {
         state = State.Fire;
         fireEffect.Play();
-        yield return new WaitForSeconds(3);
+        yield return new WaitForSeconds(FireDuration);
         fireEffect.Stop();
         state = State.None;
     }

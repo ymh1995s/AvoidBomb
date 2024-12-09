@@ -16,7 +16,8 @@ public class ProjectileSpawner : MonoBehaviour
         while (true)
         {
             Instantiate(bomb, transform.position, Quaternion.identity);
-            yield return new WaitForSeconds(3f);
+            float waitTime = Random.Range(0.5f, 1.5f);
+            yield return new WaitForSeconds(waitTime);
         }
     }
 }

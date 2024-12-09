@@ -2,10 +2,8 @@ using System;
 using System.Collections;
 using TMPro;
 using UnityEngine;
-using UnityEngine.EventSystems;
-using static PlayerState;
-using static Tile;
-using static UnityEngine.Rendering.VolumeComponent;
+using UnityEngine.UI;
+using static PlayersEnumInfo;
 
 
 public abstract class BasePlayer : ROOTOBJECT
@@ -29,8 +27,10 @@ public abstract class BasePlayer : ROOTOBJECT
     // 화염 도트딜
     Coroutine FireCoroutine = null;
     int remainedBurningTime = 0;
-    public ParticleSystem fireEffect;
 
+    // 하위 컴포넌트
+    public Image hitEffect;
+    public ParticleSystem fireEffect;
 
     protected virtual void Start()
     {
@@ -95,7 +95,7 @@ public abstract class BasePlayer : ROOTOBJECT
         else if(state == (int)ActionState.forward || state == (int)ActionState.left || state == (int)ActionState.right || state == (int)ActionState.back)
         {
             Vector3 direction = (destinationPos - transform.position).normalized;
-            transform.position += direction * 1.5f * Time.deltaTime;
+            transform.position += direction * 2f * Time.deltaTime;
 
             if ((transform.position - destinationPos ).magnitude < 0.2f)
             {
@@ -136,13 +136,22 @@ public abstract class BasePlayer : ROOTOBJECT
         {
             Death();
         }
+        else
+        {
+            StartCoroutine(CoHitEffect());
+        }
     }
 
     protected virtual void Death()
     {
-        //TODO
         state = (int)ActionState.Die;
-        print($"DEATH");
+        StartCoroutine(CoLoadDefeatPopup());
+    }
+
+    IEnumerator CoLoadDefeatPopup()
+    {
+        yield return new WaitForSeconds(3f);
+        GameManager.Instance.LoadLosePopup();
     }
 
     protected virtual void CheckFireTIle()
@@ -161,7 +170,7 @@ public abstract class BasePlayer : ROOTOBJECT
             {
                 remainedBurningTime = 5;
                 if(FireCoroutine == null)
-                    FireCoroutine = StartCoroutine(Bunrning());
+                    FireCoroutine = StartCoroutine(CoBunrning());
             }
         }
     }
@@ -177,20 +186,30 @@ public abstract class BasePlayer : ROOTOBJECT
         }
     }
 
-    IEnumerator Bunrning()
+    IEnumerator CoBunrning()
     {
         fireEffect.Play();
         while (remainedBurningTime>0)
         {
-            hp--; // 딜 조정 인터페이스를 열어둘 필요는 있음
+            //hp--; // 딜 조정 인터페이스를 열어둘 필요는 있음
+            //HpUpdateTrigger?.Invoke(hp, maxHp);
+            Hit((int)FireDoTDeal.Basic); // 다른 인터페이스로 열어둘 필요는 있음
+
             remainedBurningTime--;
-            HpUpdateTrigger?.Invoke(hp, maxHp);
             Debug.Log($"{remainedBurningTime} {hp} time/hp remained");
             yield return new WaitForSeconds(1f);
         }
         fireEffect.Stop();
         FireCoroutine = null;
     }
+
+    IEnumerator CoHitEffect()
+    {
+        hitEffect.gameObject.SetActive(true);
+        yield return new WaitForSeconds(0.1f);
+        hitEffect.gameObject.SetActive(false);
+    }
+
 
     public abstract void Skill();
 }

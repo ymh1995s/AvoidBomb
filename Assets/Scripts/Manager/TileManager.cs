@@ -20,6 +20,10 @@ public class TileManager : MonoBehaviour
     int[] dx = { 0, 1, -1, 0 };
     int[,] visited;
 
+    // Fire Range
+    int fireTileRange = 1;
+
+
     private void Start()
     {
         Init();
@@ -93,7 +97,7 @@ public class TileManager : MonoBehaviour
                 if (ny < 0 || nx < 0 || ny >= yoffsetEnd || nx >= (xoffsetEnd - xoffsetStart) || visited[nx, ny] != 0) continue;
                 visited[nx, ny] = visited[x, y] + 1;
                 optimizationQ.Enqueue((nx, ny));
-                if (visited[nx, ny] <= 2)
+                if (visited[nx, ny] <= fireTileRange)
                 {
                     q.Enqueue((nx, ny));
                     tilesInfo[nx, ny].ActivateFIre(false);
