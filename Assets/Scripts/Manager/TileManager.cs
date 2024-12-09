@@ -21,7 +21,7 @@ public class TileManager : MonoBehaviour
     int[,] visited;
 
     // Fire Range
-    int fireTileRange = 1;
+    int fireTileRange = 2;
 
 
     private void Start()

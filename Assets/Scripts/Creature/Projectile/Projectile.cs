@@ -23,8 +23,8 @@ public class Projectile : ROOTOBJECT
 
     protected enum MasterDamage
     {
-        Bomb = 10,
-        Missile = 20
+        Bomb = 5,
+        Missile = 10
     }
 
     protected virtual void Start()

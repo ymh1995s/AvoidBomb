@@ -58,22 +58,22 @@ public abstract class BasePlayer : ROOTOBJECT
         if(state == (int)ActionState.Idle)
         {
             ValueTuple<int, int> ReservePos = (currentPosX, currentPosY);
-            if (Input.GetKey(KeyCode.W))
+            if (Input.GetKeyDown(KeyCode.W))
             {
                 ReservePos.Item2++;
                 state = (int)ActionState.forward;
             }
-            else if (Input.GetKey(KeyCode.S))
+            else if (Input.GetKeyDown(KeyCode.S))
             {
                 ReservePos.Item2--;
                 state = (int)ActionState.back;
             }
-            else if (Input.GetKey(KeyCode.A))
+            else if (Input.GetKeyDown(KeyCode.A))
             {
                 ReservePos.Item1--;
                 state = (int)ActionState.left;
             }
-            else if (Input.GetKey(KeyCode.D))
+            else if (Input.GetKeyDown(KeyCode.D))
             {
                 ReservePos.Item1++;
                 state = (int)ActionState.right;
@@ -168,7 +168,7 @@ public abstract class BasePlayer : ROOTOBJECT
             if (tile == null) return;
             if(tile.state == Tile.State.Fire)
             {
-                remainedBurningTime = 5;
+                remainedBurningTime = 3;
                 if(FireCoroutine == null)
                     FireCoroutine = StartCoroutine(CoBunrning());
             }
