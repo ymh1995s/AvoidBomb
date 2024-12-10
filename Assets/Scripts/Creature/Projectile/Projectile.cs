@@ -36,10 +36,20 @@ public class Projectile : ROOTOBJECT
         maxRangeY = tileManager.yoffsetEnd;
 
         // 일정 확률로 플레이어 타게팅
-        int quarter = Random.Range(0, 9);
+        int quarter = Random.Range(0, 5);
         if(quarter ==0)
         {
-            targetPos = GameManager.Instance.player.transform.position; // 플레이어 타겟 테스트
+            int playerPosX = GameManager.Instance.player.currentPosX + Random.Range(-2, 2);
+            int playerPosY = GameManager.Instance.player.currentPosY + Random.Range(-2, 2);
+            if (playerPosX < 0 || playerPosY < 0 || 
+                playerPosX >= GameManager.Instance.tileManager.xoffsetEnd - GameManager.Instance.tileManager.xoffsetStart - 1 || playerPosY >= GameManager.Instance.tileManager.yoffsetEnd - 1)
+            {
+                targetPos = tileManager.tilesInfo[Random.Range(0, maxRangeX), Random.Range(0, maxRangeY)].transform.position;
+            }
+            else
+            {
+                targetPos = tileManager.tilesInfo[playerPosX, playerPosY].transform.position;
+            }
         }
         else
         {
